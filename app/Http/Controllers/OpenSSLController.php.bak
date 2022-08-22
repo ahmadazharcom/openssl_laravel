@@ -1,0 +1,74 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+
+class OpenSSLController extends Controller{
+
+    public function index(){
+
+    }
+
+    public function aes256($input = "abcd", $secret_key = "1234", $secret_iv = "1111"){
+
+		$method = "AES-256-CBC";
+		// hash
+		$key = hash('sha256', $secret_key);
+
+		// iv - encrypt method AES-256-CBC expects 16 bytes - else you will get a warning
+		$iv = substr(hash('sha256', $secret_iv), 0, 16);
+		// encrypt token;
+		$encrypt = openssl_encrypt($input, $method, $key, 0, $iv);
+
+		// decrypt token
+		$decrypt = openssl_decrypt($encrypt, $method, $key, 0, $iv);
+	
+		echo "Encode: ".$encrypt;
+
+		echo "<br />";
+		
+		echo "<br />";		
+
+		echo "Decode: ".$decrypt;  	
+		
+		echo "<br />";
+		
+		echo "<br />";		
+
+		echo "Previous Hash: ".$secret_key;
+
+		echo "<br />";
+		
+		echo "<br />";		
+
+		echo "Data Hash: ".$secret_iv;			
+
+    }
+
+    public function sha256($input){
+
+    	$encrypt = hash('sha256', $input);
+
+    	return $encrypt;
+
+    }
+	
+	public function decrypt($input = "abcd", $secret_key = "1234", $secret_iv = "1111"){
+		
+		$method = "AES-256-CBC";
+		// hash
+
+		// iv - encrypt method AES-256-CBC expects 16 bytes - else you will get a warning
+		$iv = substr(hash('sha256', $secret_iv), 0, 16);
+		// encrypt token;
+
+		// decrypt token
+		$decrypt = openssl_decrypt($input, $method, $secret_key, 0, $iv);
+
+
+		echo "Decode: ".$decrypt; 		
+	}
+
+}
